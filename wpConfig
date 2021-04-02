@@ -1,0 +1,14 @@
+# PRE-REQUISITIES
+# Repository must contain wp-ComposerSetup files (If it is a private repository, make sure to add server SSH public key in repository before executing this script)
+# projectName and repositoryName must be same
+# targetDirectory, dbUser and dbPassword must exist
+# webUrl must be pointed to the target server already so that SSL can be applied
+# Do not end targetDirectory with forward slash
+
+targetDirectory=/home/ahsan/wpScript
+projectName=wp-baseSetup
+dbName=wpbasedb
+dbUser=ahsan
+dbPassword=ahsan
+repositoryUrl=https://github.com/ahsanmirxa/wp-baseSetup.git
+webUrl=wp.demo.io
