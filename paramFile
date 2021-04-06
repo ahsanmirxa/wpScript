@@ -5,7 +5,7 @@
 # webUrl must be pointed to the target server already so that SSL can be applied
 # Do not end targetDirectory with forward slash
 
-targetDirectory=/home/ahsan/wpScript
+targetDirectory=/home/ahsan/wpBase
 projectName=wp-baseSetup
 dbName=wpbasedb
 dbUser=ahsan

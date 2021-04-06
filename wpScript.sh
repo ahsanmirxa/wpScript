@@ -1,9 +1,10 @@
 #!/bin/bash
 
-source wpConfig 
+source paramFile 
 
 # Uing Sourced Arguments 
 
+echo -e "\n1. Sourced Parameter"
 echo -e "\nTarget Directory is $targetDirectory"
 echo -e "\nProjectName is $projectName"
 echo -e "\nDatabaseName is $dbName"
@@ -12,11 +13,15 @@ echo -e "\nTarget Repository URL is $repositoryUrl"
 
 # Setting up DB
 
+echo -e "\n2. Setting up DB\n"
+
 sudo mysql -u root -pkesc@118 -e "CREATE DATABASE $dbName;"
 sudo mysql -u root -pkesc@118 -e "GRANT ALL PRIVILEGES ON $dbName. * TO '$dbUser'@'localhost';"
 sudo mysql -u root -pkesc@118 -e "FLUSH PRIVILEGES;"
 
 # Cloning base WP directory from GITHUB in Target Directory
+
+echo -e "\n3. Cloning base WP directory from GITHUB in Target Directory\n"
 
 cd $targetDirectory
 
@@ -26,27 +31,34 @@ cd $projectName
 
 # Setting up base WP 
 
+echo -e "\n4. Copying Environment File"
+
 mv .env.example .env
 
 # Change the webUrl and DB credentials in .env file
+
+echo -e "\n5. Change the webUrl and DB credentials in .env file"
+
 sed -i "s/WP_SITEURL=/WP_SITEURL=http:\/\/$webUrl/" .env
 sed -i "s/WP_HOME=/WP_HOME=http:\/\/$webUrl/" .env
 sed -i "s/DB_USER=/DB_USER=$dbUser/" .env
 sed -i "s/DB_PASS=/DB_PASS=$dbPassword/" .env
 sed -i "s/DB_NAME=/DB_NAME=$dbName/" .env
 
-# Composer Install
-composer install
+echo -e "\n6. Composer Install"
 
-# vendor/wp-cli/wp-cli/bin/wp core download --path=public
-vendor/wp-cli/wp-cli/bin/wp core download --path=public
+composer install --quiet
+
+echo -e "\n7. vendor/wp-cli/wp-cli/bin/wp core download --path=public"
+
+vendor/wp-cli/wp-cli/bin/wp core download --quiet --path=public
 
 # If need to assign TargetDirectory ownership to another user
 # sudo chown -R cc:www-data $targetDirectory/$projectName
 
 # Setting up NGINX config
 
-# Creating a site-available config for WP setup
+echo -e "\n8. Creating a site-available config for WP setup"
 
 echo -e "
 server {
@@ -81,11 +93,14 @@ server {
 
 }" | sudo tee -a /etc/nginx/sites-available/$projectName
 
-# Create symlink
+
+echo -e "\n9. Create symlink"
+
 sudo ln -s /etc/nginx/sites-available/$projectName /etc/nginx/sites-enabled/$projectName
 
-# Reload NGINX config
+echo -e "\n10. Reload NGINX config\n"
+
 sudo service nginx reload
 
-# Setting up SSL using Certbot
+echo -e "\n11. Setting up SSL using Certbot\n"
 sudo certbot --nginx -n --redirect -d $webUrl

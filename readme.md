@@ -15,3 +15,4 @@ Repository must contain wp-ComposerSetup files (If it is a private repository, m
 **_webUrl_** must be pointed to the target server already so that SSL can be applied
 
 Do not end **_targetDirectory_** with forward slash
+
